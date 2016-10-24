@@ -1,0 +1,23 @@
+
+	/**
+	 * Loads an array of OGG sounds whose names follow a pattern. The pattern
+	 * is specified as a string containing a dollar sign that is a placeholder
+	 * for the array indices, starting at 0. The lowest value for which no
+	 * file exists determines the size of the array.
+	 * 
+	 * @param filenamePattern the file name pattern containing a dollar sign
+	 * @return the sound objects
+	 * @throws IOException on I/O errors
+	 */
+	private Audio[] loadOggSoundArray(final String filenamePattern) throws IOException {
+		List<Audio> sounds = new ArrayList<>();
+		while (true) {
+			try {
+				sounds.add(loadOggSound(filenamePattern.replace("$", "" + sounds.size())));
+			} catch (FileNotFoundException e) {
+				break;
+			}
+		}
+		return sounds.toArray(new Audio[sounds.size()]);
+	}
+
