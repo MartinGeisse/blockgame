@@ -33,7 +33,18 @@ public class Main {
 //		ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
 		Plane plane = new Plane(10, 10);
-		plane.setBlock(5, 1, 1);
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 10; y++) {
+				if (x == 0 || x == 9 || y == 0 || y == 9) {
+					plane.setBlock(x, y, 4);
+				} else if ((x == 4 || x == 5) && (y == 4 || y == 5)) {
+					plane.setBlock(x, y, 5);
+				} else {
+					plane.setBlock(x, y, 1);
+				}
+			}
+		}
+
 		Camera camera = new Camera();
 		camera.setZoom(2.0f);
 		Game game = new Game(plane, camera);

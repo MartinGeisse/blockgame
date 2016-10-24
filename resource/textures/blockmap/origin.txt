@@ -1,7 +1,7 @@
 tile1.png
 	self-made
 
-metal-plates_0.png
+metal-plates_0.png, metal-plates
 	License: CC-BY 3.0
 	Page: http://opengameart.org/content/metal-tiles-collection
 	Deeplink: http://opengameart.org/sites/default/files/styles/medium/public/metal-plates_0.png
