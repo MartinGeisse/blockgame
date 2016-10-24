@@ -1,2 +1,17 @@
 tile1.png
 	self-made
+
+metal-plates_0.png
+	License: CC-BY 3.0
+	Page: http://opengameart.org/content/metal-tiles-collection
+	Deeplink: http://opengameart.org/sites/default/files/styles/medium/public/metal-plates_0.png
+
+crawl-tiles
+	License: CC0
+	Page: http://opengameart.org/content/dungeon-crawl-32x32-tiles
+	Deeplink: http://opengameart.org/sites/default/files/crawl-tiles%20Oct-5-2010.zip
+
+simpleGraphics_tiles32x32.png
+	License: CC0
+	Page: http://opengameart.org/content/simple-duotone-tileset
+	Deeplink: http://opengameart.org/sites/default/files/simpleGraphics_tiles32x32_0.png
