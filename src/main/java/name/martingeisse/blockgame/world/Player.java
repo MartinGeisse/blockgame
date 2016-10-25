@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 public final class Player {
 
 	public static final double PLAYER_RADIUS = 0.35;
+	public static final double MOUSE_SENSITIVITY = 0.02;
+	public static final double FRICTION = 0.15;
 
 	private double positionX;
 	private double positionY;
@@ -16,8 +18,12 @@ public final class Player {
 	private double velocityY;
 
 	public void performMouseMovement(int mouseDx, int mouseDy) {
-		positionX += mouseDx;
-		positionY += mouseDy;
+		velocityX += mouseDx * MOUSE_SENSITIVITY;
+		velocityX *= (1 - FRICTION);
+		velocityY += mouseDy * MOUSE_SENSITIVITY;
+		velocityY *= (1 - FRICTION);
+		positionX += velocityX;
+		positionY += velocityY;
 	}
 
 	public double getPositionX() {

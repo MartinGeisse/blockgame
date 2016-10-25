@@ -4,6 +4,7 @@ import name.martingeisse.blockgame.resource.Resources;
 import name.martingeisse.blockgame.system.Texture;
 import name.martingeisse.blockgame.world.Camera;
 import name.martingeisse.blockgame.world.Plane;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -34,6 +35,7 @@ public final class Game {
 	 * @throws BreakFrameLoopException if this handler wants to break the frame loop
 	 */
 	public void handleStep() throws BreakFrameLoopException {
+		plane.getPlayer().performMouseMovement(Mouse.getDX(), Mouse.getDY());
 	}
 
 	/**

@@ -16,6 +16,7 @@ import name.martingeisse.blockgame.resource.Resources;
 import name.martingeisse.blockgame.system.Launcher;
 import name.martingeisse.blockgame.world.Plane;
 import name.martingeisse.blockgame.world.Player;
+import org.lwjgl.input.Mouse;
 
 /**
  * The main class.
@@ -57,6 +58,7 @@ public class Main {
 
 		Launcher launcher = new Launcher(args);
 		launcher.startup();
+		Mouse.setGrabbed(true);
 		Resources.setResourceManager(new DefaultResourceManager(new DefaultResouceLoader()));
 		FrameLoop frameLoop = new FrameLoop(new FrameHandler(game));
 		try {
