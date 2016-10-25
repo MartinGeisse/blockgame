@@ -34,12 +34,12 @@ public class Main {
 //		ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 //		ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("nashorn");
 
-		Plane plane = new Plane(10, 10);
-		for (int x = 0; x < 10; x++) {
-			for (int y = 0; y < 10; y++) {
-				if (x == 0 || x == 9 || y == 0 || y == 9) {
+		Plane plane = new Plane(50, 50);
+		for (int x = 0; x < 50; x++) {
+			for (int y = 0; y < 50; y++) {
+				if (x == 0 || x == 49 || y == 0 || y == 49) {
 					plane.setBlock(x, y, 4);
-				} else if ((x == 4 || x == 5) && (y == 4 || y == 5)) {
+				} else if ((x == 24 || x == 25) && (y == 24 || y == 25)) {
 					plane.setBlock(x, y, 5);
 				} else {
 					plane.setBlock(x, y, 1);

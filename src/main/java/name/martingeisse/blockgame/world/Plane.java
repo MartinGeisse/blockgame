@@ -94,12 +94,10 @@ public final class Plane {
 		if (textureProvider == null) {
 			return;
 		}
-		int w = Math.min(width, 100);
-		int h = Math.min(height, 30);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3ub((byte) 255, (byte) 255, (byte) 255);
-		for (int x = 0; x < w; x++) {
-			for (int y = 0; y < h; y++) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				Texture texture = textureProvider.getBlockTexture(getBlock(x, y));
 				if (texture == null) {
 					continue;

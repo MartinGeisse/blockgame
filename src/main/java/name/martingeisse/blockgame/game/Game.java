@@ -36,6 +36,7 @@ public final class Game {
 	 */
 	public void handleStep() throws BreakFrameLoopException {
 		plane.getPlayer().performMouseMovement(Mouse.getDX(), Mouse.getDY());
+		camera.moveToKeepFocusOnPlayer();
 	}
 
 	/**

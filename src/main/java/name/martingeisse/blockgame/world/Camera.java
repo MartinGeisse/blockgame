@@ -16,6 +16,8 @@ import java.util.List;
  */
 public final class Camera {
 
+	public static final double PLAYER_FOCUS_BORDER = 6.0;
+
 	private Plane plane;
 	private float zoom = 1.0f;
 	private float screenX = 0.0f;
@@ -33,6 +35,7 @@ public final class Camera {
 
 	/**
 	 * Getter method for the zoom.
+	 *
 	 * @return the zoom
 	 */
 	public float getZoom() {
@@ -41,6 +44,7 @@ public final class Camera {
 
 	/**
 	 * Setter method for the zoom.
+	 *
 	 * @param zoom the zoom to set
 	 */
 	public void setZoom(float zoom) {
@@ -49,6 +53,7 @@ public final class Camera {
 
 	/**
 	 * Getter method for the screenX.
+	 *
 	 * @return the screenX
 	 */
 	public float getScreenX() {
@@ -57,6 +62,7 @@ public final class Camera {
 
 	/**
 	 * Setter method for the screenX.
+	 *
 	 * @param screenX the screenX to set
 	 */
 	public void setScreenX(float screenX) {
@@ -65,6 +71,7 @@ public final class Camera {
 
 	/**
 	 * Getter method for the screenY.
+	 *
 	 * @return the screenY
 	 */
 	public float getScreenY() {
@@ -73,6 +80,7 @@ public final class Camera {
 
 	/**
 	 * Setter method for the screenY.
+	 *
 	 * @param screenY the screenY to set
 	 */
 	public void setScreenY(float screenY) {
@@ -97,6 +105,7 @@ public final class Camera {
 
 	/**
 	 * Getter method for the screen width, in units.
+	 *
 	 * @return the screen width, in units
 	 */
 	public float getScreenWidthUnits() {
@@ -105,6 +114,7 @@ public final class Camera {
 
 	/**
 	 * Getter method for the screen height, in units.
+	 *
 	 * @return the screen height, in units
 	 */
 	public float getScreenHeightUnits() {
@@ -117,13 +127,38 @@ public final class Camera {
 	public void draw() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(-getScreenWidthUnits()/2.0, getScreenWidthUnits()/2.0, -getScreenHeightUnits()/2.0, getScreenHeightUnits()/2.0, -1, 1);
+		GL11.glOrtho(-getScreenWidthUnits() / 2.0, getScreenWidthUnits() / 2.0, -getScreenHeightUnits() / 2.0, getScreenHeightUnits() / 2.0, -1, 1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glTranslatef(-screenX, -screenY, 0.0f);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		plane.drawInternal(textureProvider, playerTexture);
+	}
+
+	public void moveToKeepFocusOnPlayer() {
+		Player player = plane.getPlayer();
+		screenX += getFocusMovementDeltaBothSides(getScreenWidthUnits(), player.getPositionX() - screenX);
+		screenY += getFocusMovementDeltaBothSides(getScreenHeightUnits(), player.getPositionY() - screenY);
+	}
+
+	private static double getFocusMovementDeltaBothSides(double size, double relativePosition) {
+		return getFocusMovementDeltaOneSide(size, relativePosition) - getFocusMovementDeltaOneSide(size, -relativePosition);
+	}
+
+	private static double getFocusMovementDeltaOneSide(double size, double relativePosition) {
+		double halfSize = size / 2.0;
+		if (relativePosition > halfSize) {
+			return PLAYER_FOCUS_BORDER / 2.0 + relativePosition - halfSize;
+		} else if (relativePosition > halfSize - PLAYER_FOCUS_BORDER) {
+			return 1 / (2.0 * PLAYER_FOCUS_BORDER) * sqr(relativePosition + PLAYER_FOCUS_BORDER - halfSize);
+		} else {
+			return 0;
+		}
+	}
+
+	private static double sqr(double x) {
+		return x * x;
 	}
 
 }
