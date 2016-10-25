@@ -2,6 +2,7 @@ package name.martingeisse.blockgame.game;
 
 import name.martingeisse.blockgame.resource.Resources;
 import name.martingeisse.blockgame.system.Texture;
+import name.martingeisse.blockgame.world.Camera;
 import name.martingeisse.blockgame.world.Plane;
 import org.lwjgl.opengl.GL11;
 
@@ -41,8 +42,10 @@ public final class Game {
 	public void draw() {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		camera.prepare();
-		plane.draw(this::getTextureForBlock);
+		camera.setTextureProvider(this::getTextureForBlock);
+		camera.setPlayerTexture(Resources.getTexture("sprites/yaycandies/mmstroke_red.png"));
+		camera.setPlane(plane);
+		camera.draw();
 	}
 
 	private Texture getTextureForBlock(int block) {
