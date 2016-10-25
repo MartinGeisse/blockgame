@@ -117,7 +117,7 @@ public final class Camera {
 	public void draw() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0, getScreenWidthUnits(), getScreenHeightUnits(), 0, -1, 1);
+		GL11.glOrtho(-getScreenWidthUnits()/2.0, getScreenWidthUnits()/2.0, -getScreenHeightUnits()/2.0, getScreenHeightUnits()/2.0, -1, 1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
 		GL11.glTranslatef(-screenX, -screenY, 0.0f);
