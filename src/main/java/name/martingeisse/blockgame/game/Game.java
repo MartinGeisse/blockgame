@@ -21,6 +21,15 @@ public final class Game {
 		"blockmap/metal-plates/metal-wall-2.png",
 	};
 
+	private static final boolean[] blockSolid = {
+		true,
+		false,
+		false,
+		false,
+		true,
+		true,
+	};
+
 	private final Plane plane;
 	private final Camera camera;
 
@@ -35,7 +44,10 @@ public final class Game {
 	 * @throws BreakFrameLoopException if this handler wants to break the frame loop
 	 */
 	public void handleStep() throws BreakFrameLoopException {
-		plane.getPlayer().performMouseMovement(Mouse.getDX(), Mouse.getDY());
+		plane.getPlayer().performMouseMovement(Mouse.getDX(), Mouse.getDY(), (x, y) -> {
+			int block = plane.getBlock(x, y);
+			return block < 0 || block >= blockSolid.length || blockSolid[block];
+		});
 		camera.moveToKeepFocusOnPlayer();
 	}
 
