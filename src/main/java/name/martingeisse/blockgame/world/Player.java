@@ -29,24 +29,30 @@ public final class Player {
 		velocityY *= (1 - FRICTION);
 
 		// actually move, checking for collisions
-		Collision collision = CollisionUtil.checkSphereBlockCollision(positionX, positionY, velocityX, velocityY, PLAYER_RADIUS, blockMapCollider);
+		performMovement(1.0, blockMapCollider);
+
+	}
+
+	private void performMovement(double remainingFraction, CollisionUtil.BlockMapCollider blockMapCollider) {
+		double deltaX = velocityX * remainingFraction;
+		double deltaY = velocityY * remainingFraction;
+		Collision collision = CollisionUtil.checkSphereBlockCollision(positionX, positionY, deltaX, deltaY, PLAYER_RADIUS, blockMapCollider);
 		if (collision == null) {
-			positionX += velocityX;
-			positionY += velocityY;
+			positionX += deltaX;
+			positionY += deltaY;
 		} else {
 
 			// move the first part
-			positionX += velocityX * collision.getMovementFraction();
-			positionY += velocityY * collision.getMovementFraction();
+			positionX += deltaX * collision.getMovementFraction();
+			positionY += deltaY * collision.getMovementFraction();
 
 			// reflect movement
 			double temp = (2 - COLLISION_FRICTION) * (velocityX * collision.getSurfaceNormalX() + velocityY * collision.getSurfaceNormalY());
 			velocityX -= temp * collision.getSurfaceNormalX();
 			velocityY -= temp * collision.getSurfaceNormalY();
 
-			// move the second part TODO should check again for collisions
-			positionX += velocityX * (1 - collision.getMovementFraction());
-			positionY += velocityY * (1 - collision.getMovementFraction());
+			// move the second part, checking for collisions again
+			performMovement(remainingFraction * (1 - collision.getMovementFraction()), blockMapCollider);
 
 		}
 
