@@ -29,11 +29,11 @@ public final class Player {
 		velocityY *= (1 - FRICTION);
 
 		// actually move, checking for collisions
-		performMovement(1.0, blockMapCollider);
+		performMovement(1.0, blockMapCollider, 0);
 
 	}
 
-	private void performMovement(double remainingFraction, CollisionUtil.BlockMapCollider blockMapCollider) {
+	private void performMovement(double remainingFraction, CollisionUtil.BlockMapCollider blockMapCollider, int recursionDepth) {
 		double deltaX = velocityX * remainingFraction;
 		double deltaY = velocityY * remainingFraction;
 		Collision collision = CollisionUtil.checkSphereBlockCollision(positionX, positionY, deltaX, deltaY, PLAYER_RADIUS, blockMapCollider);
@@ -52,7 +52,9 @@ public final class Player {
 			velocityY -= temp * collision.getSurfaceNormalY();
 
 			// move the second part, checking for collisions again
-			performMovement(remainingFraction * (1 - collision.getMovementFraction()), blockMapCollider);
+			if (recursionDepth < 10) {
+				performMovement(remainingFraction * (1 - collision.getMovementFraction()), blockMapCollider, recursionDepth + 1);
+			}
 
 		}
 

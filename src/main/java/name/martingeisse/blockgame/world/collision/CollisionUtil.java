@@ -1,6 +1,6 @@
 package name.martingeisse.blockgame.world.collision;
 
-import java.util.function.Predicate;
+import java.util.Random;
 
 /**
  *
@@ -45,31 +45,99 @@ public final class CollisionUtil {
 
 	private static Collision checkSphereSideCollision(double x0, double y0, double dx, double dy, double radius, BlockMapCollider blockMapCollider) {
 
-		// TODO remove
-		if (dx < 0 && x0 + dx < radius) {
-			return new Collision((radius - x0) / dx, -1, 0);
+		Collision eastCollision = null;
+		for (double dx2 = (1.5 - (x0 + radius) % 1.0) % 1.0; dx2 <= dx; dx2++) {
+			double dy2 = dy * dx2 / dx;
+			int x2 = (int)Math.round(x0 + dx2 + 0.5);
+			int y2 = (int)Math.round(y0 + dy2);
+			if (blockMapCollider.isSolid(x2, y2)) {
+				eastCollision = new Collision(dx2 / dx, -1.0, 0.0);
+				break;
+			}
 		}
-		return null;
 
+		Collision westCollision = null;
+		for (double dx2 = (1.5 - (x0 - radius) % 1.0) % 1.0 - 1.0; dx2 >= dx; dx2--) {
+			double dy2 = dy * dx2 / dx;
+			int x2 = (int)Math.round(x0 + dx2 - 0.5);
+			int y2 = (int)Math.round(y0 + dy2);
+			if (blockMapCollider.isSolid(x2, y2)) {
+				westCollision = new Collision(dx2 / dx, +1.0, 0.0);
+				break;
+			}
+		}
+
+		Collision northCollision = null;
+		for (double dy2 = (1.5 - (y0 + radius) % 1.0) % 1.0; dy2 <= dy; dy2++) {
+			double dx2 = dx * dy2 / dy;
+			int x2 = (int)Math.round(x0 + dx2);
+			int y2 = (int)Math.round(y0 + dy2 + 0.5);
+			if (blockMapCollider.isSolid(x2, y2)) {
+				northCollision = new Collision(dy2 / dy, 0.0, -1.0);
+				break;
+			}
+		}
+
+		Collision southCollision = null;
+		for (double dy2 = (1.5 - (y0 - radius) % 1.0) % 1.0 - 1.0; dy2 >= dy; dy2--) {
+			double dx2 = dx * dy2 / dy;
+			int x2 = (int)Math.round(x0 + dx2);
+			int y2 = (int)Math.round(y0 + dy2 - 0.5);
+			if (blockMapCollider.isSolid(x2, y2)) {
+				southCollision = new Collision(dy2 / dy, 0.0, +1.0);
+				break;
+			}
+		}
+
+		return chooseNearer(chooseNearer(westCollision, eastCollision), chooseNearer(northCollision, southCollision));
 	}
 
 	private static Collision checkSphereCornerCollision(double x0, double y0, double dx, double dy, double radius, BlockMapCollider blockMapCollider) {
-		double stepFraction = 0.1;
-		int stepCount = 10;
-		double stepDx = dx * stepFraction;
-		double stepDy = dy * stepFraction;
-		for (int i=0; i<stepCount; i++) {
+		double movementLength = Math.sqrt(dx * dx + dy * dy);
+		int stepCount = (int)(movementLength / 0.1) + 1;
+		double stepDx = dx / stepCount;
+		double stepDy = dy / stepCount;
+		for (int i=1; i<=stepCount; i++) {
 			double x = x0 + i * stepDx;
 			double y = y0 + i * stepDy;
 			// The relevant corner changes when the player crosses a block center. Block centers have integer coordinates,
 			// so we need floor/ceil rounding here, not round-to-nearest.
 			int ix = (int)Math.floor(x);
 			int iy = (int)Math.floor(y);
-			// TODO find collision
-			// TODO refine step size to find it more exactly
+			double cornerX = ix + 0.5;
+			double cornerY = iy + 0.5;
+			double normalX = cornerX - x;
+			double normalY = cornerY - y;
+			double normalNormSquared = normalX * normalX + normalY * normalY;
+			if (normalNormSquared < radius * radius) {
+				double normalNorm = Math.sqrt(normalNormSquared);
+				int cx = 0, cy = 0;
+				boolean found = false;
+				if (blockMapCollider.isSolid(ix, iy)) {
+					cx = ix;
+					cy = iy;
+					found = true;
+				} else if (blockMapCollider.isSolid(ix + 1, iy)) {
+					cx = ix + 1;
+					cy = iy;
+					found = true;
+				} else if (blockMapCollider.isSolid(ix, iy + 1)) {
+					cx = ix;
+					cy = iy + 1;
+					found = true;
+				} else if (blockMapCollider.isSolid(ix + 1, iy + 1)) {
+					cx = ix + 1;
+					cy = iy + 1;
+					found = true;
+				}
+				if (found) {
+					return new Collision(((double)(i - 1)) / stepCount, normalX / normalNorm, normalY / normalNorm);
+				}
+			}
 		}
 		return null;
 	}
+
 
 	private static Collision chooseNearer(Collision a, Collision b) {
 		if (a == null) {
