@@ -11,6 +11,24 @@ import org.lwjgl.opengl.GL11;
  */
 public final class Player {
 
+	private static final boolean[] blockSolid = {
+			true,
+			false,
+			false,
+			false,
+			true,
+			true,
+	};
+
+	private static final String[] collidionSoundNames = {
+		null,
+		null,
+		null,
+		null,
+		"wood_and_metal_vol.2/metal6.wav",
+		"wood_and_metal_vol.2/wood3.wav",
+	};
+
 	public static final double PLAYER_RADIUS = 0.35;
 	public static final double MOUSE_SENSITIVITY = 0.02;
 	public static final double FRICTION = 0.15;
@@ -23,7 +41,7 @@ public final class Player {
 
 	private int collisionSoundCooldown = 0;
 
-	public void performMouseMovement(int mouseDx, int mouseDy, CollisionUtil.BlockMapCollider blockMapCollider) {
+	public void performMouseMovement(int mouseDx, int mouseDy, Plane plane) {
 
 		// handle acceleration and friction
 		velocityX += mouseDx * MOUSE_SENSITIVITY;
@@ -32,13 +50,17 @@ public final class Player {
 		velocityY *= (1 - FRICTION);
 
 		// actually move, checking for collisions
-		performMovement(1.0, blockMapCollider, 0);
+		performMovement(1.0, plane, 0);
 
 	}
 
-	private void performMovement(double remainingFraction, CollisionUtil.BlockMapCollider blockMapCollider, int recursionDepth) {
+	private void performMovement(double remainingFraction, Plane plane, int recursionDepth) {
 		double deltaX = velocityX * remainingFraction;
 		double deltaY = velocityY * remainingFraction;
+		CollisionUtil.BlockMapCollider blockMapCollider = (x, y) -> {
+			int block = plane.getBlock(x, y);
+			return block < 0 || block >= blockSolid.length || blockSolid[block];
+		};
 		Collision collision = CollisionUtil.checkSphereBlockCollision(positionX, positionY, deltaX, deltaY, PLAYER_RADIUS, blockMapCollider);
 		if (collision == null) {
 			positionX += deltaX;
@@ -56,13 +78,16 @@ public final class Player {
 
 			// move the second part, checking for collisions again
 			if (recursionDepth < 10) {
-				performMovement(remainingFraction * (1 - collision.getMovementFraction()), blockMapCollider, recursionDepth + 1);
+				performMovement(remainingFraction * (1 - collision.getMovementFraction()), plane, recursionDepth + 1);
 			}
 
 			// play a collision sound
 			if (collisionSoundCooldown == 0) {
-				Resources.getSound("wood_and_metal_vol.2/metal6.wav").playAsSoundEffect(1.0f, 1.0f, false);
-				collisionSoundCooldown = 10;
+				int blockType = plane.getBlock(collision.getBlockX(), collision.getBlockY());
+				if (blockType >= 0 || blockType < collidionSoundNames.length && collidionSoundNames[blockType] != null) {
+					Resources.getSound(collidionSoundNames[blockType]).playAsSoundEffect(1.0f, 1.0f, false);
+					collisionSoundCooldown = 10;
+				}
 			}
 
 		}
