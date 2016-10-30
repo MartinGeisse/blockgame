@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
  */
 public final class Player {
 
+	public static final double FAST_COLLISION_MIN_SPEED = 0.7;
+
 	private static final boolean[] blockSolid = {
 			true,
 			false,
@@ -52,6 +54,11 @@ public final class Player {
 		// actually move, checking for collisions
 		performMovement(1.0, plane, 0);
 
+		// play a collision sound only once every few frames at most
+		if (collisionSoundCooldown > 0) {
+			collisionSoundCooldown--;
+		}
+
 	}
 
 	private void performMovement(double remainingFraction, Plane plane, int recursionDepth) {
@@ -70,6 +77,10 @@ public final class Player {
 			// move the first part
 			positionX += deltaX * collision.getMovementFraction();
 			positionY += deltaY * collision.getMovementFraction();
+
+			// Determine velocity perpendicular to the surface, to trigger effects on "fast" collisions. This is simply
+			// the negated dot product of the velocity and the surface normal.
+			double perpendicularVelocity = -(velocityX * collision.getSurfaceNormalX() + velocityY * collision.getSurfaceNormalY());
 
 			// reflect movement
 			double temp = (2 - COLLISION_FRICTION) * (velocityX * collision.getSurfaceNormalX() + velocityY * collision.getSurfaceNormalY());
@@ -90,11 +101,22 @@ public final class Player {
 				}
 			}
 
+			// trigger effects for "fast" collisions
+			if (perpendicularVelocity > FAST_COLLISION_MIN_SPEED) {
+				int blockX = collision.getBlockX();
+				int blockY = collision.getBlockY();
+				int blockType = plane.getBlock(blockX, blockY);
+				int behindBlockX = collision.getBlockX() - (int)collision.getSurfaceNormalX();
+				int behindBlockY = collision.getBlockY() - (int)collision.getSurfaceNormalY();
+				int behindBlockType = plane.getBlock(behindBlockX, behindBlockY);
+				if (blockType == 5 && behindBlockType == 1) {
+					plane.setBlock(blockX, blockY, 1);
+					plane.setBlock(behindBlockX, behindBlockY, 5);
+				}
+			}
+
 		}
 
-		if (collisionSoundCooldown > 0) {
-			collisionSoundCooldown--;
-		}
 	}
 
 	public double getPositionX() {

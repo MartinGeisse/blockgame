@@ -39,7 +39,7 @@ public class Main {
 			for (int y = 0; y < 50; y++) {
 				if (x == 0 || x == 49 || y == 0 || y == 49) {
 					plane.setBlock(x, y, 4);
-				} else if ((x == 24 || x == 25) && (y == 24 || y == 25)) {
+				} else if ((x == 24 /*|| x == 25*/) && (y == 24 || y == 25)) {
 					plane.setBlock(x, y, 5);
 				} else {
 					plane.setBlock(x, y, 1);
