@@ -1,0 +1,8 @@
+
+editor:
+- browser-based -> UI leichter zu bauen
+	direkte Rückmeldung per Websockets (nötig? -> hier kommt die Frge auf, ob man eigentlich dieselbe Welt
+	bearbeitet, inder die Spieler sind, oder nur ein Template dafür)
+	-
+	Änderungen, die man im Browser macht, werden an die Spieler übertragen und wirken sich direkt aus
+- default: nur 1 spieler pro rechner gespeichert -> keine auswahl nötig, kann direkt starten
