@@ -1,5 +1,6 @@
 package name.martingeisse.blockgame.world;
 
+import name.martingeisse.blockgame.resource.Resources;
 import name.martingeisse.blockgame.system.Texture;
 import name.martingeisse.blockgame.world.collision.Collision;
 import name.martingeisse.blockgame.world.collision.CollisionUtil;
@@ -19,6 +20,8 @@ public final class Player {
 	private double positionY;
 	private double velocityX;
 	private double velocityY;
+
+	private int collisionSoundCooldown = 0;
 
 	public void performMouseMovement(int mouseDx, int mouseDy, CollisionUtil.BlockMapCollider blockMapCollider) {
 
@@ -56,8 +59,17 @@ public final class Player {
 				performMovement(remainingFraction * (1 - collision.getMovementFraction()), blockMapCollider, recursionDepth + 1);
 			}
 
+			// play a collision sound
+			if (collisionSoundCooldown == 0) {
+				Resources.getSound("wood_and_metal_vol.2/metal6.wav").playAsSoundEffect(1.0f, 1.0f, false);
+				collisionSoundCooldown = 10;
+			}
+
 		}
 
+		if (collisionSoundCooldown > 0) {
+			collisionSoundCooldown--;
+		}
 	}
 
 	public double getPositionX() {

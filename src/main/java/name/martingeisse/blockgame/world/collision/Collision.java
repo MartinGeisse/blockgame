@@ -11,11 +11,15 @@ public class Collision {
 	private final double movementFraction;
 	private final double surfaceNormalX;
 	private final double surfaceNormalY;
+	private final int blockX;
+	private final int blockY;
 
-	public Collision(double movementFraction, double surfaceNormalX, double surfaceNormalY) {
+	public Collision(double movementFraction, double surfaceNormalX, double surfaceNormalY, int blockX, int blockY) {
 		this.movementFraction = movementFraction;
 		this.surfaceNormalX = surfaceNormalX;
 		this.surfaceNormalY = surfaceNormalY;
+		this.blockX = blockX;
+		this.blockY = blockY;
 	}
 
 	public double getMovementFraction() {
@@ -28,6 +32,14 @@ public class Collision {
 
 	public double getSurfaceNormalY() {
 		return surfaceNormalY;
+	}
+
+	public int getBlockX() {
+		return blockX;
+	}
+
+	public int getBlockY() {
+		return blockY;
 	}
 
 }

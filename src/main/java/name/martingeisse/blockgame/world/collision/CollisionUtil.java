@@ -51,7 +51,7 @@ public final class CollisionUtil {
 			int x2 = (int)Math.round(x0 + dx2 + 0.5);
 			int y2 = (int)Math.round(y0 + dy2);
 			if (blockMapCollider.isSolid(x2, y2)) {
-				eastCollision = new Collision(dx2 / dx, -1.0, 0.0);
+				eastCollision = new Collision(dx2 / dx, -1.0, 0.0, x2, y2);
 				break;
 			}
 		}
@@ -62,7 +62,7 @@ public final class CollisionUtil {
 			int x2 = (int)Math.round(x0 + dx2 - 0.5);
 			int y2 = (int)Math.round(y0 + dy2);
 			if (blockMapCollider.isSolid(x2, y2)) {
-				westCollision = new Collision(dx2 / dx, +1.0, 0.0);
+				westCollision = new Collision(dx2 / dx, +1.0, 0.0, x2, y2);
 				break;
 			}
 		}
@@ -73,7 +73,7 @@ public final class CollisionUtil {
 			int x2 = (int)Math.round(x0 + dx2);
 			int y2 = (int)Math.round(y0 + dy2 + 0.5);
 			if (blockMapCollider.isSolid(x2, y2)) {
-				northCollision = new Collision(dy2 / dy, 0.0, -1.0);
+				northCollision = new Collision(dy2 / dy, 0.0, -1.0, x2, y2);
 				break;
 			}
 		}
@@ -84,7 +84,7 @@ public final class CollisionUtil {
 			int x2 = (int)Math.round(x0 + dx2);
 			int y2 = (int)Math.round(y0 + dy2 - 0.5);
 			if (blockMapCollider.isSolid(x2, y2)) {
-				southCollision = new Collision(dy2 / dy, 0.0, +1.0);
+				southCollision = new Collision(dy2 / dy, 0.0, +1.0, x2, y2);
 				break;
 			}
 		}
@@ -131,7 +131,7 @@ public final class CollisionUtil {
 					found = true;
 				}
 				if (found) {
-					return new Collision(((double)(i - 1)) / stepCount, normalX / normalNorm, normalY / normalNorm);
+					return new Collision(((double)(i - 1)) / stepCount, normalX / normalNorm, normalY / normalNorm, cx, cy);
 				}
 			}
 		}
