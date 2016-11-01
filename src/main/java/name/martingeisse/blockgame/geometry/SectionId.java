@@ -45,7 +45,7 @@ public final class SectionId {
 	}
 
 	/**
-	 * Constructor for scaling a square-unit (x, y) position to cluster-size units.
+	 * Constructor for scaling a cell-unit (x, y) position to cluster-size units.
 	 * @param x the x coordinate of the cube position
 	 * @param y the y coordinate of the cube position
 	 * @param clusterSize the cluster size
@@ -57,7 +57,7 @@ public final class SectionId {
 	}
 	
 	/**
-	 * Constructor for scaling a square-unit (x, y) position to cluster-size units.
+	 * Constructor for scaling a cell-unit (x, y) position to cluster-size units.
 	 * @param position the cube position
 	 * @param clusterSize the cluster size
 	 */
@@ -68,7 +68,7 @@ public final class SectionId {
 	}
 
 	/**
-	 * Constructor for scaling a square-unit (x, y) position to cluster-size units.
+	 * Constructor for scaling a cell-unit (x, y) position to cluster-size units.
 	 * @param position the cube position
 	 * @param clusterSize the cluster size
 	 */

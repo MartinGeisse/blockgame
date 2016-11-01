@@ -7,12 +7,12 @@
 package name.martingeisse.blockgame.geometry;
 
 /**
- * Common constants for the Stack'd engine.
+ * Common geometry constants.
  */
 public class GeometryConstants {
 
 	/**
-	 * The number of cubes along one edge of a section.
+	 * The number of cells along one edge of a section.
 	 */
 	public static final int SECTION_SIZE = 32;
 
