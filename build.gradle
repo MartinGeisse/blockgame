@@ -11,6 +11,12 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+sourceSets.main.java.srcDir 'src/generated/java'
+sourceSets.main.resources.srcDir 'src/main/java'
+sourceSets.main.resources.srcDir 'src/generated/java'
+sourceSets.main.output.resourcesDir 'build/classes/main'
+
+
 repositories {
 	mavenCentral()
 	maven {
